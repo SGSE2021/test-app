@@ -79,7 +79,7 @@ jobs:
     
     - name: print changed files
       run: |
-        echo ${{ env.MANIFESTFILE }})
+        echo ${{ steps.file_changes.outputs.files }}
         
 #    - if: contains(steps.file_changes.outputs.files, ${{ env.MANIFESTFILE }})
 #      name: Deploy to k8s with manifest
