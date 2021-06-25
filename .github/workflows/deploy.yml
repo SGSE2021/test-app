@@ -51,7 +51,7 @@ jobs:
           tags: "${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
           #cache-from: type=gha,src=/tmp/.buildx-cache
           #cache-to: type=gha,dest=/tmp/.buildx-cache-new
-          cache-from: type=registry,ref="${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          cache-from: type=registry,ref=${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           cache-to: type=inline
           
     - name: Image digest
