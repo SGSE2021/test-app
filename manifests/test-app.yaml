@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app-back
+  template:
+    metadata:
+      labels:
+        app: test-app-back
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: test-app-back
+        image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
+        env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        ports:
+        - containerPort: 6379
+          name: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app-back
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: test-app-back
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app-front
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: test-app-front
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: test-app-front
+        image: sgse2021containerregistry.azurecr.io/test-app-front:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: REDIS
+          value: "test-app-back"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app-front
+spec:
+  type: Deployment
+  ports:
+  - port: 80
+  selector:
+    app: test-app-front
+
