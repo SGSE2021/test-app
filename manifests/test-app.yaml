@@ -29,6 +29,7 @@ kind: Service
 metadata:
   name: test-app-back
 spec:
+  type: ClusterIP
   ports:
   - port: 6379
   selector:
@@ -69,6 +70,7 @@ kind: Service
 metadata:
   name: test-app-front
 spec:
+  type: ClusterIP
   ports:
   - port: 80
   selector:
