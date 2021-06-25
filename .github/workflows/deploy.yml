@@ -15,7 +15,7 @@ env:
   MS_NAMESPACE: microservices
   IMAGE_NAME: test-app-front
   DOCKERFILE: ./Dockerfile
-  MANIFESTFILE: ./manifests/test-app.yaml
+  MANIFESTFILE: manifests/test-app.yaml
 
 jobs:
   build:
