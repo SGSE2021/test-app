@@ -69,7 +69,6 @@ kind: Service
 metadata:
   name: test-app-front
 spec:
-  type: Deployment
   ports:
   - port: 80
   selector:
