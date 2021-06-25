@@ -84,7 +84,7 @@ jobs:
         manifests: ${{ env.MANIFESTFILE }}
         namespace: ${{ env.MS_NAMESPACE }}
         
-    - if: ! contains(steps.file_changes.outputs.files, ${{ env.MANIFESTFILE }})
+    - if: "!contains(steps.file_changes.outputs.files, ${{ env.MANIFESTFILE }})"
       name: Deploy to k8s
       run: |
         kubectl rollout restart deployment test-app-front
