@@ -5,7 +5,7 @@ import redis
 import socket
 import sys
 
-app = Flask(__name__, static_url_path='vote/static')
+app = Flask(__name__, static_url_path='/vote/static')
 
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
