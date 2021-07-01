@@ -20,7 +20,7 @@ jobs:
         with:
           output: ' '
           
-      - if: contains(steps.file_changes.outputs.files, ".github/workflows/test.yml")
+      - if: contains(steps.file_changes.outputs.files, .github/workflows/test.yml)
         name: File changed
         run: |
           echo "File changed"
