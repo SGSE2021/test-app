@@ -10,7 +10,7 @@ on:
   
 env:
   IMAGE_NAME: test-app-front
-  DEPLOYMENT_NAME: test-app-front
+  SERVICE_NAME: test-app-front
   DOCKERFILE: ./Dockerfile
   MANIFESTFILE: manifests/test-app.yaml
 
@@ -82,4 +82,4 @@ jobs:
     - if: (github.event_name == 'workflow_dispatch') || !(contains(steps.file_changes.outputs.files, env.MANIFESTFILE))
       name: Deploy to k8s
       run: |
-        kubectl rollout restart deployment test-app-front --namespace ${{ secrets.MS_NAMESPACE }}
+        kubectl rollout restart deployment ${{ env.SERVICE_NAME }} --namespace ${{ secrets.MS_NAMESPACE }}
