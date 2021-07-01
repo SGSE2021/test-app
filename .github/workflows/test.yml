@@ -12,15 +12,20 @@ jobs:
       
       - name: Print trigger
         run: |
-          echo ${{ github.event }}
           echo ${{ github.event_name }}
       
-      - id: file_changes
+      - if: ${{ github.event_name }} != workflow_dispatch
+        id: file_changes
         uses: trilom/file-changes-action@v1.2.3
         with:
           output: ' '
           
-      - if: contains(steps.file_changes.outputs.files, '.github/workflows/test.yml')
+      - if: ${{ github.event_name }} != workflow_dispatch && contains(steps.file_changes.outputs.files, '.github/workflows/test.yml')
         name: File changed
         run: |
           echo "File changed"
+          
+      - if: ${{ github.event_name }} == workflow_dispatch
+        name: Dispatch
+        run: |
+          echo "${{ github.event_name }}"
