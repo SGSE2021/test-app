@@ -20,12 +20,12 @@ jobs:
         with:
           output: ' '
           
-      - if: ${{ github.event_name }} != 'workflow_dispatch' && contains(steps.file_changes.outputs.files, '.github/workflows/test.yml')
+      - if: github.event_name != 'workflow_dispatch' && contains(steps.file_changes.outputs.files, '.github/workflows/test.yml')
         name: File changed
         run: |
           echo "File changed"
           
-      - if: ${{ github.event_name }} == 'workflow_dispatch'
+      - if: github.event_name == 'workflow_dispatch'
         name: Dispatch
         run: |
           echo "${{ github.event_name }}"
