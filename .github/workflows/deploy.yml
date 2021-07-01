@@ -9,11 +9,8 @@ on:
   workflow_dispatch:
   
 env:
-  CONTAINER_REGISTRY: sgse2021containerregistry.azurecr.io
-  CLUSTER_NAME: sgse2021AKSCluster
-  RESOURCE_GROUP: sgse2021ResourceGroup
-  MS_NAMESPACE: microservices
   IMAGE_NAME: test-app-front
+  DEPLOYMENT_NAME: test-app-front
   DOCKERFILE: ./Dockerfile
   MANIFESTFILE: manifests/test-app.yaml
 
@@ -29,7 +26,7 @@ jobs:
     - name: Login to Azure Container Registry
       uses: Azure/docker-login@v1
       with:
-        login-server: ${{ env.CONTAINER_REGISTRY }}
+        login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
         
@@ -40,8 +37,8 @@ jobs:
           context: ./
           file: ${{ env.DOCKERFILE }}
           push: true
-          tags: "${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          cache-from: type=registry,ref=${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: "${{ secrets.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          cache-from: type=registry,ref=${{ secrets.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           cache-to: type=inline
           
     - name: Image digest
@@ -61,7 +58,7 @@ jobs:
     - name: Login to Azure Container Registry
       uses: Azure/docker-login@v1
       with:
-        login-server: ${{ env.CONTAINER_REGISTRY }}
+        login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
@@ -69,8 +66,8 @@ jobs:
       uses: Azure/aks-set-context@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-        cluster-name: ${{ env.CLUSTER_NAME }}
-        resource-group: ${{ env.RESOURCE_GROUP }}
+        cluster-name: ${{ secrets.CLUSTER_NAME }}
+        resource-group: ${{ secrets.RESOURCE_GROUP }}
         
     - if: github.event_name != 'workflow_dispatch'
       id: file_changes
@@ -83,9 +80,9 @@ jobs:
       uses: Azure/k8s-deploy@v1
       with:
         manifests: ${{ env.MANIFESTFILE }}
-        namespace: ${{ env.MS_NAMESPACE }}
+        namespace: ${{ secrets.MS_NAMESPACE }}
         
     - if: github.event_name == 'workflow_dispatch' || "!contains(steps.file_changes.outputs.files, env.MANIFESTFILE)"
       name: Deploy to k8s
       run: |
-        kubectl rollout restart deployment test-app-front --namespace ${{ env.MS_NAMESPACE }}
+        kubectl rollout restart deployment test-app-front --namespace ${{ secrets.MS_NAMESPACE }}
