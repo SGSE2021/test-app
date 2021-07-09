@@ -58,7 +58,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: test-app-front
-        image: sgse2021containerregistry.azurecr.io/test-app-front:latest
+        image: sgse2021cr.azurecr.io/test-app-front:latest
         ports:
         - containerPort: 80
         env:
